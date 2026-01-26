@@ -1,0 +1,15 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "event-scan-worker-client-xxx",
+	"main": "src/index.js",
+	"compatibility_date": "2025-09-27",
+	"observability": {
+		"enabled": true
+	},
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "client-xxx-event-scan-db"
+      }
+      ]
+}
