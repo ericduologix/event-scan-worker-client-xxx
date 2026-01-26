@@ -22,16 +22,31 @@ jobs:
       - name: Install Wrangler
         run: npm install -g wrangler
 
+
+      - name: Show repo root files
+        run: |
+          pwd
+          ls -la
+
+      - name: Print wrangler config
+        run: |
+          echo "----- wrangler.json -----"
+          test -f wrangler.json && cat wrangler.json || echo "wrangler.json NOT FOUND"
+          echo "----- wrangler.toml -----"
+          test -f wrangler.toml && cat wrangler.toml || echo "wrangler.toml NOT FOUND"
+          echo "----- migrations directory -----"
+          test -d migrations && ls -la migrations || echo "migrations/ NOT FOUND"
+
       - name: Create D1 database (safe if already exists)
         run: |
           wrangler d1 create client-xxx-event-scan-db || true
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_EVENT_SCAN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Apply D1 migrations
         run: |
           wrangler d1 migrations apply DB --remote
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_EVENT_SCAN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
