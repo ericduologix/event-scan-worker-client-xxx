@@ -8,3 +8,7 @@ database_name = "client-xxx-event-scan-db"
 database_id = "447a2f50-c6fd-460e-8b33-a7ebae8ab4d1"
 
 migrations_dir = "migrations"
+
+[vars]
+CLIENT_ID = "client-xxx"
+CLIENT_NAME = "Client XXX"

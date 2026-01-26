@@ -1,6 +1,11 @@
 import { json } from '../../lib/json.js';
 
 export async function handleLogPost(request, env) {
+	// Fail fast if DB binding is missing
+	if (!env.DB) {
+		return json({ ok: false, error: 'db_binding_missing' }, 500);
+	}
+
 	let body;
 	try {
 		body = await request.json();
@@ -63,11 +68,86 @@ export async function handleLogPost(request, env) {
 		);
 	}
 
-	// No persistence yet (as requested)
+	// Build row for D1
+	const id = crypto.randomUUID();
+	const createdAt = new Date().toISOString();
+
+	// Optional: basic normalization (keeps your system predictable)
+	const row = {
+		id,
+		created_at: createdAt,
+
+		client_id: body.client.id,
+		client_name: body.client.name,
+		property_id: body.property.id,
+		property_name: body.property.name,
+
+		page_url: body.pageUrl,
+		event_name: body.eventName,
+		key_name: body.keyName,
+		issue_type: body.issueType,
+
+		event_timestamp: body.timestamp,
+		event_date: body.date,
+		session_id: body.session,
+
+		browser_name: body.browserName,
+		browser_version: body.browserVersion,
+	};
+
+	try {
+		await env.DB.prepare(
+			`INSERT INTO logs (
+        id, created_at,
+        client_id, client_name,
+        property_id, property_name,
+        page_url, event_name, key_name, issue_type,
+        event_timestamp, event_date, session_id,
+        browser_name, browser_version
+      ) VALUES (
+        ?, ?,
+        ?, ?,
+        ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?,
+        ?, ?
+      )`
+		)
+			.bind(
+				row.id,
+				row.created_at,
+				row.client_id,
+				row.client_name,
+				row.property_id,
+				row.property_name,
+				row.page_url,
+				row.event_name,
+				row.key_name,
+				row.issue_type,
+				row.event_timestamp,
+				row.event_date,
+				row.session_id,
+				row.browser_name,
+				row.browser_version
+			)
+			.run();
+	} catch (err) {
+		// Surface a useful error to Postman while you’re building
+		return json(
+			{
+				ok: false,
+				error: 'db_insert_failed',
+				message: err?.message || String(err),
+			},
+			500
+		);
+	}
+
 	return json(
 		{
 			ok: true,
-			received: {
+			id,
+			inserted: {
 				client: body.client,
 				property: body.property,
 				session: body.session,
@@ -76,7 +156,7 @@ export async function handleLogPost(request, env) {
 				keyName: body.keyName,
 				issueType: body.issueType,
 			},
-			ts: new Date().toISOString(),
+			ts: createdAt,
 		},
 		201
 	);
