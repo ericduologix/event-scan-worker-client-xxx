@@ -9,7 +9,13 @@
     "d1_databases": [
       {
         "binding": "DB",
-        "database_name": "client-xxx-event-scan-db"
+        "database_name": "client-xxx-event-scan-db",
+		"database_id":"database_id"
       }
-      ]
+      ],
+	  "vars": {
+    "CONFIG_SOURCE": "json",
+    "CLIENT_ID": "client-xxx",
+    "CLIENT_NAME": "Client XXX"
+}
 }
