@@ -9,78 +9,74 @@ on:
 jobs:
   setup-d1:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install Wrangler
-        run: npm install -g wrangler
+        run: npm install -g wrangler@4.60.0
 
-
-      - name: Show repo root files
-        run: |
-          pwd
-          ls -la
-
-      - name: Print wrangler config
-        run: |
-          echo "----- wrangler.json -----"
-          test -f wrangler.json && cat wrangler.json || echo "wrangler.json NOT FOUND"
-          echo "----- wrangler.toml -----"
-          test -f wrangler.toml && cat wrangler.toml || echo "wrangler.toml NOT FOUND"
-          echo "----- migrations directory -----"
-          test -d migrations && ls -la migrations || echo "migrations/ NOT FOUND"
-
-      - name: Create D1 database (safe if already exists)
-        run: |
-          wrangler d1 create client-xxx-event-scan-db || true
+      - name: Ensure D1 database exists and capture UUID
+        id: d1
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-      - name: Show working directory + list files
         run: |
-           pwd
-           ls -la
+          set -euo pipefail
+          DB_NAME="client-xxx-event-scan-db"
 
-      - name: Print wrangler.toml
-        run: |
-          echo "----- wrangler.toml -----"
-          cat ./wrangler.toml
-
-
-      - name: Apply D1 migrations
-        run: wrangler d1 migrations apply DB --remote --config ./wrangler.toml
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-      - name: Dump Wrangler logs (on failure)
-        if: failure()
-        run: |
-          echo "==== Wrangler log directory ===="
-          ls -la /home/runner/.config/.wrangler/logs || true
-
-          echo "==== Latest Wrangler log (by mtime) ===="
-          latest="$(ls -t /home/runner/.config/.wrangler/logs/*.log 2>/dev/null | head -n 1)"
-          echo "Latest: $latest"
-          if [ -n "$latest" ]; then
-            echo "---- BEGIN $latest ----"
-            cat "$latest"
-            echo "---- END $latest ----"
+          # If it already exists, use its UUID; otherwise create it and then read UUID.
+          if wrangler d1 list --json | node -e "process.exit(JSON.parse(require('fs').readFileSync(0,'utf8')).some(d=>d.name==='${DB_NAME}')?0:1)"; then
+            echo "D1 exists: $DB_NAME"
           else
-            echo "No Wrangler logs found."
+            echo "Creating D1: $DB_NAME"
+            wrangler d1 create "$DB_NAME"
           fi
 
-          echo "==== All Wrangler logs (last 200 lines each) ===="
-          for f in /home/runner/.config/.wrangler/logs/*.log; do
-            [ -e "$f" ] || continue
-            echo "---- TAIL $f ----"
-            tail -n 200 "$f"
-          done
+          DB_ID="$(wrangler d1 list --json | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')).find(x=>x.name==='${DB_NAME}'); if(!d){process.exit(2)}; process.stdout.write(d.uuid || d.id || '')")"
+
+          if [ -z "$DB_ID" ]; then
+            echo "Failed to resolve DB UUID for $DB_NAME"
+            exit 3
+          fi
+
+          echo "db_id=$DB_ID" >> "$GITHUB_OUTPUT"
+          echo "Resolved DB UUID: $DB_ID"
+
+      - name: Write database_id into wrangler.toml
+        env:
+          DB_ID: ${{ steps.d1.outputs.db_id }}
+        run: |
+          set -euo pipefail
+
+          # Ensure wrangler.toml has database_id line (idempotent)
+          if grep -q '^database_id\s*=' wrangler.toml; then
+            sed -i.bak "s/^database_id\s*=.*$/database_id = \"${DB_ID}\"/" wrangler.toml
+          else
+            # Insert after database_name line
+            awk -v id="$DB_ID" '
+              {print}
+              $0 ~ /^database_name\s*=/ {print "database_id = \"" id "\""}
+            ' wrangler.toml > wrangler.toml.tmp && mv wrangler.toml.tmp wrangler.toml
+          fi
+
+          echo "----- wrangler.toml (after) -----"
+          cat wrangler.toml
+
+      - name: Apply D1 migrations
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: wrangler d1 migrations apply DB --remote --config ./wrangler.toml
+
+      - name: Commit wrangler.toml with database_id back to repo
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add wrangler.toml
+          git commit -m "Bootstrap D1 database_id for DB binding" || exit 0
+          git push
