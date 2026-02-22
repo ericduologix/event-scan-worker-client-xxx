@@ -1,7 +1,9 @@
 [
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-001", "name": "Main yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-001",
+    "propertyName": "Main yyy",
     "session": "sess-seed-001",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T14:00:05.120Z",
@@ -14,8 +16,10 @@
     "validationDurationMs": 12
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-001", "name": "Main yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-001",
+    "propertyName": "Main yyy",
     "session": "sess-seed-001",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T14:01:10.451Z",
@@ -28,8 +32,10 @@
     "validationDurationMs": 18
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-001", "name": "Main yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-001",
+    "propertyName": "Main yyy",
     "session": "sess-seed-001",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T14:02:33.009Z",
@@ -42,8 +48,10 @@
     "validationDurationMs": 25
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-002", "name": "Secondary yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-002",
+    "propertyName": "Secondary yyy",
     "session": "sess-seed-001",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T14:04:02.777Z",
@@ -56,8 +64,10 @@
     "validationDurationMs": 10
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-002", "name": "Secondary yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-002",
+    "propertyName": "Secondary yyy",
     "session": "sess-seed-001",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T14:05:44.123Z",
@@ -70,8 +80,10 @@
     "validationDurationMs": 16
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-003", "name": "Launch yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-003",
+    "propertyName": "Launch yyy",
     "session": "sess-seed-002",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T15:10:15.500Z",
@@ -84,8 +96,10 @@
     "validationDurationMs": 14
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-003", "name": "Launch yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-003",
+    "propertyName": "Launch yyy",
     "session": "sess-seed-002",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T15:12:49.901Z",
@@ -98,8 +112,10 @@
     "validationDurationMs": 21
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-001", "name": "Main yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-001",
+    "propertyName": "Main yyy",
     "session": "sess-seed-002",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T15:20:06.240Z",
@@ -112,8 +128,10 @@
     "validationDurationMs": 19
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-001", "name": "Main yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-001",
+    "propertyName": "Main yyy",
     "session": "sess-seed-002",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T15:22:31.800Z",
@@ -126,8 +144,10 @@
     "validationDurationMs": 11
   },
   {
-    "client": { "id": "client-456", "name": "Client 456" },
-    "property": { "id": "prop-002", "name": "Secondary yyy" },
+    "clientId": "client-678",
+    "clientName": "Client 678",
+    "propertyId": "prop-002",
+    "propertyName": "Secondary yyy",
     "session": "sess-seed-003",
     "date": "2026-02-15",
     "timestamp": "2026-02-15T16:00:03.333Z",

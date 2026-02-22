@@ -1,7 +1,7 @@
 [
   {
     "attemptId": "att-seed-0003",
-    "clientId": "client-456",
+    "clientId": "client-678",
     "propertyId": "prop-001",
     "session": "sess-seed-001",
     "validatedEventName": "add-to-cart.pdp",
@@ -12,7 +12,7 @@
   },
   {
     "attemptId": "att-seed-0003",
-    "clientId": "client-456",
+    "clientId": "client-678",
     "propertyId": "prop-001",
     "session": "sess-seed-001",
     "validatedEventName": "add-to-cart.pdp",
@@ -23,7 +23,7 @@
   },
   {
     "attemptId": "att-seed-0007",
-    "clientId": "client-456",
+    "clientId": "client-678",
     "propertyId": "prop-003",
     "session": "sess-seed-002",
     "validatedEventName": "orders.click.view.top-nav",
@@ -34,7 +34,7 @@
   },
   {
     "attemptId": "att-seed-0010",
-    "clientId": "client-456",
+    "clientId": "client-678",
     "propertyId": "prop-002",
     "session": "sess-seed-003",
     "validatedEventName": "checkout.payment.submit",
@@ -45,7 +45,7 @@
   },
   {
     "attemptId": "att-seed-0010",
-    "clientId": "client-456",
+    "clientId": "client-678",
     "propertyId": "prop-002",
     "session": "sess-seed-003",
     "validatedEventName": "checkout.payment.submit",
@@ -56,7 +56,7 @@
   },
   {
     "attemptId": "att-seed-0010",
-    "clientId": "client-456",
+    "clientId": "client-678",
     "propertyId": "prop-002",
     "session": "sess-seed-003",
     "validatedEventName": "checkout.payment.submit",
